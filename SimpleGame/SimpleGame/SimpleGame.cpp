@@ -14,8 +14,13 @@ but WITHOUT ANY WARRANTY.
 #include "Dependencies\freeglut.h"
 
 #include "Renderer.h"
+#include "Tower_object.h"
 
 Renderer *g_Renderer = NULL;
+
+//임시로 넣어 두겠습니다.
+Tower tower = Tower(0, 0, 1);
+//POINT *tp1;
 
 void RenderScene(void)
 {
@@ -23,7 +28,10 @@ void RenderScene(void)
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
 
 	// Renderer Test
-	g_Renderer->DrawSolidRect(0, 0, 0, 4, 1, 0, 1, 1);
+	//g_Renderer->DrawSolidRect(0, 0, 0, 4, 1, 0, 1, 1);
+
+	
+	g_Renderer->DrawSolidRect(tower.Location_search().x, tower.Location_search().y, 0, tower.Tower_Update(), 1, 1, 1, 1);
 
 	glutSwapBuffers();
 }
