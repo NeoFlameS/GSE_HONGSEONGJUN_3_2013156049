@@ -35,9 +35,9 @@ void RenderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
-
+	g_Renderer->DrawSolidRect(-200, 200, 0, 4, 1, 0, 1, 1);
 	// Renderer Test
-	//g_Renderer->DrawSolidRect(0, 0, 0, 4, 1, 0, 1, 1);
+	//
 	main_ob->draw();
 	//g_Renderer->DrawSolidRect(tower.Location_search().x, tower.Location_search().y, 0, tower.Tower_Update(), 1, 1, 1, 1);
 	/*if (towerl != NULL) {
@@ -66,28 +66,13 @@ void Idle(void)
 
 void MouseInput(int button, int state, int x, int y)
 {
+	printf("%d %d\n", x, y);
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+		main_ob->create_tower(x-250, 250-y, 1);
 		mouse_state = 1;
 	}
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && mouse_state ==1) {
-		/*tow_list *t;
-		t = (tow_list*) malloc (sizeof(tow_list));
-		t->cur_tow = Tower(x-250, 250-y, 1);
-		t->next_tow = NULL;
-		tow_list *cur = towerl;
-		while (1) {
-			if (towerl == NULL) {
-				towerl=t;
-				break;
-			}
-			else if (cur != NULL && cur->next_tow == NULL) {
-				cur->next_tow = t;
-				break;
-			}
-			else {
-				cur = cur->next_tow;
-			}
-		}*/
+		
 		mouse_state = 0;
 	}
 	

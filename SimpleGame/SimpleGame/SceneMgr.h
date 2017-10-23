@@ -9,11 +9,13 @@ class SceneMgr {
 
 	Tower *tb[MAX_INDEX];
 	Renderer *g;
+	
 
 public :
-
+	int cur_index;
 	SceneMgr();
 	SceneMgr(Renderer *a);
 	void Update_Scene();
 	void draw();
+	void create_tower(int x, int y, int type);
 };
