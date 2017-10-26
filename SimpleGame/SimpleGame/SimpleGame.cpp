@@ -48,7 +48,7 @@ void Idle(void)
 void MouseInput(int button, int state, int x, int y)
 {
 	printf("%d %d\n", x, y);
-	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN) {
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && mouse_state == 0) {
 		main_ob->create_tower(x-250, 250-y, 1);
 		mouse_state = 1;
 	}
