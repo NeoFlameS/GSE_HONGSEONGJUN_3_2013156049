@@ -23,38 +23,19 @@ SceneMgr *main_ob=NULL;
 
 //임시로 넣어 두겠습니다.
 
-/*struct tow_list {
-	Tower cur_tow;
-	tow_list * next_tow;
-};
-tow_list *towerl;//헤더*/
+
 int mouse_state = 0;
-//POINT *tp1;
+
 
 void RenderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
-	g_Renderer->DrawSolidRect(-200, 200, 0, 4, 1, 0, 1, 1);
+	//g_Renderer->DrawSolidRect(-200, 200, 0, 4, 1, 0, 1, 1);
 	// Renderer Test
 	//
 	main_ob->draw();
-	//g_Renderer->DrawSolidRect(tower.Location_search().x, tower.Location_search().y, 0, tower.Tower_Update(), 1, 1, 1, 1);
-	/*if (towerl != NULL) {
-		tow_list *t = towerl;
-		while (t != NULL) {
-			g_Renderer->DrawSolidRect(t->cur_tow.Location_search().x, t->cur_tow.Location_search().y, 0,10, 1, 1, 1, 1);// t->cur_tow.Tower_Update()
-			t->cur_tow.Tower_Update();
-			if (t->next_tow == NULL) {
-				break;
-			}
-			else {
-				
-				t = t->next_tow;
-			}
-		}
-	}*/
-
+	
 
 	glutSwapBuffers();
 }
@@ -117,7 +98,7 @@ int main(int argc, char **argv)
 
 
 	main_ob = new SceneMgr(g_Renderer);
-	//towerl= NULL;
+
 
 	glutDisplayFunc(RenderScene);
 	glutIdleFunc(Idle);

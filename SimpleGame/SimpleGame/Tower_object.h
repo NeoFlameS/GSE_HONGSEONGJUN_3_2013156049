@@ -8,9 +8,9 @@ class Tower{
 private:
 	short hp, delay, type;//타워 체력, 지연시간, 타워 종류
 	short gen_timer;//젠 타임,
-	float size;//사이즈
+	int size;//사이즈
 	POINT locate,vector;
-
+	float Life_time;
 
 public:
 	Tower();
@@ -18,5 +18,8 @@ public:
 
 	bool Damaged(short damage);
 	POINT Location_search();
-	float Tower_Update();
+	bool Tower_Update(float time);
+
+	int get_size();
+
 };

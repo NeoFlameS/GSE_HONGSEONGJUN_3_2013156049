@@ -13,7 +13,7 @@ Tower::Tower() {
 Tower::Tower(long x, long y, short type) {//x,y 좌, 타워의 종류
 	
 	this->type = type;
-	
+	this->Life_time = 2000;
 	srand(time(NULL));
 	this->locate.x = x;
 	
@@ -26,7 +26,7 @@ Tower::Tower(long x, long y, short type) {//x,y 좌, 타워의 종류
 	if (this->type == 1) {
 		this->hp = 300;
 		this->delay = 60;
-		this->size = 100;
+		this->size = 20;
 	}	
 }
 
@@ -42,10 +42,15 @@ bool Tower::Damaged(short damage) {
 
 }
 
-float Tower::Tower_Update() {//업데이트, 임시로 사이즈를 리턴하도록
+bool Tower::Tower_Update(float time) {//업데이트, 임시로 사이즈를 리턴하도록
 	//this->gen_timer--;
 	//this->locate.y++;
 	
+	this->Life_time -= time;
+
+	if (Life_time <= 0) {
+		return FALSE;
+	}
 
 	if (this->locate.x <= -250) {
 		this->locate.x = -250;
@@ -73,10 +78,13 @@ float Tower::Tower_Update() {//업데이트, 임시로 사이즈를 리턴하도록
 	this->locate.x += this->vector.x;
 	this->locate.y += this->vector.y;
 
-	return this->size;
-	//return true;
+	return TRUE;
 }
 
 POINT Tower::Location_search() {
 	return this->locate;
+}
+
+int Tower::get_size() {
+	return this->size;
 }
