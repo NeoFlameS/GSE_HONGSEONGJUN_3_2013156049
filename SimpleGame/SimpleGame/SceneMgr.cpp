@@ -5,17 +5,22 @@ SceneMgr::SceneMgr() {
 	int i = 0;
 	srand(time(NULL));
 	
-	this->tb[0] = &Tower(rand() % 500, rand() % 500, 1);
+	this->tb[0] = &Object(rand() % 500, rand() % 500, 1);
 	this->cur_index = 10;
 }
 SceneMgr::SceneMgr(Renderer *a)
 {
+	srand(time(NULL));
+
 	this->g = a;
 	int i = 0;
+
 	ZeroMemory(tb,sizeof(tb));
+
 	srand(time(NULL));
-	this->tb[0] = new Tower((rand() % 500)-250, (rand() % 500)-250, 1);
-	this->cur_index = 10;
+
+	this->tb[0] = new Object( 0, 0, 2);//빌딩 하나 생성
+	this->cur_index = MAX_INDEX;
 
 	this->Prv_time = 0;
 	this->Bt_time = 0;
@@ -30,12 +35,13 @@ void SceneMgr::Update_Scene()
 		if (this->tb[i] == NULL) {
 			continue;
 		}
-		Dead_Object = this->tb[i]->Tower_Update(this->Bt_time);
+		Dead_Object = this->tb[i]->Object_Update(this->Bt_time);
 		if (Dead_Object == FALSE) {
-			Tower *h = tb[i];
+			Object *h = tb[i];
 			tb[i] = NULL;
 			free(h);
 		}
+		
 	}
 	
 	Bt_time = timeGetTime() - this->Prv_time;
@@ -100,11 +106,11 @@ int* SceneMgr::colison_test(POINT hit_obj,int pr_index,int size) {
 	return a;
 }
 
-void SceneMgr::create_tower(int x, int y, int type)
+void SceneMgr::create_Object(int x, int y, int type)
 {
-	Tower *tx;
-	tx = (Tower*)malloc(sizeof(Tower));
-	tx = new Tower(x, y, type);
+	Object *tx;
+	tx = (Object*)malloc(sizeof(Object));
+	tx = new Object(x, y, type);
 
 	int i;
 	for (i = 0; i < MAX_INDEX; i++) {

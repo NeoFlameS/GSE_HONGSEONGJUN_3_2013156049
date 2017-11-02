@@ -15,7 +15,7 @@ but WITHOUT ANY WARRANTY.
 
 #include "SceneMgr.h"
 #include "Renderer.h"
-#include "Tower_object.h"
+#include "Object.h"
 
 
 Renderer *g_Renderer = NULL;
@@ -49,7 +49,7 @@ void MouseInput(int button, int state, int x, int y)
 {
 	printf("%d %d\n", x, y);
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && mouse_state == 0) {
-		main_ob->create_tower(x-250, 250-y, 1);
+		main_ob->create_Object(x-250, 250-y, OBJECT_CHARACTER);
 		mouse_state = 1;
 	}
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && mouse_state ==1) {
