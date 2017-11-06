@@ -13,25 +13,29 @@ but WITHOUT ANY WARRANTY.
 #include "Dependencies\glew.h"
 #include "Dependencies\freeglut.h"
 
+#include "SceneMgr.h"
 #include "Renderer.h"
-#include "Tower_object.h"
+#include "Object.h"
+
 
 Renderer *g_Renderer = NULL;
+SceneMgr *main_ob=NULL;
 
 //임시로 넣어 두겠습니다.
-Tower tower = Tower(0, 0, 1);
-//POINT *tp1;
+
+
+int mouse_state = 0;
+
 
 void RenderScene(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 	glClearColor(0.0f, 0.3f, 0.3f, 1.0f);
-
+	//g_Renderer->DrawSolidRect(-200, 200, 0, 4, 1, 0, 1, 1);
 	// Renderer Test
-	//g_Renderer->DrawSolidRect(0, 0, 0, 4, 1, 0, 1, 1);
-
+	//
+	main_ob->draw();
 	
-	g_Renderer->DrawSolidRect(tower.Location_search().x, tower.Location_search().y, 0, tower.Tower_Update(), 1, 1, 1, 1);
 
 	glutSwapBuffers();
 }
@@ -43,6 +47,16 @@ void Idle(void)
 
 void MouseInput(int button, int state, int x, int y)
 {
+	printf("%d %d\n", x, y);
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && mouse_state == 0) {
+		main_ob->create_Object(x-250, 250-y, OBJECT_CHARACTER);
+		mouse_state = 1;
+	}
+	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && mouse_state ==1) {
+		
+		mouse_state = 0;
+	}
+	
 	RenderScene();
 }
 
@@ -81,6 +95,10 @@ int main(int argc, char **argv)
 	{
 		std::cout << "Renderer could not be initialized.. \n";
 	}
+
+
+	main_ob = new SceneMgr(g_Renderer);
+
 
 	glutDisplayFunc(RenderScene);
 	glutIdleFunc(Idle);
