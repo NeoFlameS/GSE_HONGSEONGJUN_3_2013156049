@@ -5,7 +5,7 @@ SceneMgr::SceneMgr() {
 	int i = 0;
 	srand(time(NULL));
 	
-	this->tb[0] = &Object(rand() % 500, rand() % 500, 1);
+	this->tb[0] = &Object(rand() % 500, rand() % 500, 1,-1);
 	this->cur_index = 10;
 }
 SceneMgr::SceneMgr(Renderer *a)
@@ -18,8 +18,8 @@ SceneMgr::SceneMgr(Renderer *a)
 	ZeroMemory(tb,sizeof(tb));
 
 	srand(time(NULL));
-
-	this->tb[0] = new Object( 0, 0, 2);//빌딩 하나 생성
+	this->building_image = a->CreatePngTexture("./Textures/PNGs/copy.png");
+	this->tb[0] = new Object( 0, 0, 2, -1);//빌딩 하나 생성
 	this->cur_index = MAX_INDEX;
 
 	this->Prv_time = 0;
@@ -32,16 +32,20 @@ void SceneMgr::Update_Scene()
 	boolean Dead_Object = TRUE;
 
 	this->colison_test();
-
+	int state = 0;
 	for (i = 0; i < MAX_INDEX; i++) {
 		if (this->tb[i] == NULL) {
 			continue;
 		}
-		Dead_Object = this->tb[i]->Object_Update(this->Bt_time);
+		Dead_Object = this->tb[i]->Object_Update(this->Bt_time,&state);
 		if (Dead_Object == FALSE) {
 			Object *h = tb[i];
 			tb[i] = NULL;
 			free(h);
+		}
+		if (state == 1) {
+			state = 0;
+			this->create_Object(this->tb[i]->Location_search().x+this->tb[i]->get_vector().x*this->tb[i]->get_size(), this->tb[i]->Location_search().y + this->tb[i]->get_vector().y*this->tb[i]->get_size(),4,i);
 		}
 		
 	}
@@ -69,43 +73,15 @@ void SceneMgr::draw()
 		s = this->tb[i]->Location_search();
 		//a = this->colison_test(s, i, this->tb[i]->get_size());
 		rgb = this->tb[i]->get_color();
-		this->g->DrawSolidRect(s.x,s.y,i,tb[i]->get_size(),rgb[0], rgb[1], rgb[2],0);
+		if (this->tb[i]->get_type() == 2) this->g->DrawTexturedRect(s.x, s.y, i, tb[i]->get_size(), rgb[0], rgb[1], rgb[2], 1, this->building_image);
+		else this->g->DrawSolidRect(s.x,s.y,i,tb[i]->get_size(),rgb[0], rgb[1], rgb[2],1);
 	}
-
+	Sleep(10);
 	this->Update_Scene();
 }
 
 void SceneMgr::colison_test() {
-	/*int a[3] = {1,1,1};
-	int j = 0;
-	POINT Hit_test;
-	bool hit = FALSE;
-	while (j < MAX_INDEX) {
-
-		if (j == pr_index) {
-			j++;
-			continue;
-		}
-		else if (j >= cur_index) {
-			break;
-		}
-
-		if (this->tb[j] == NULL) {
-			j++;
-			continue;
-		}
-		Hit_test = this->tb[j]->Location_search();
-
-		if (hit_obj.x- (int)(size/2)<Hit_test.x + (int)(tb[j]->get_size()/2) && hit_obj.x+ (int)(size / 2)>Hit_test.x - (int)(tb[j]->get_size() / 2)) {//hit_ob의 왼쪽이 HIT_test의 오른쪽 보다 작을때 또는 hitob의 오른쪽이 hittest의 왼쪽보다 클때
-			if (hit_obj.y - (int)(size / 2) < Hit_test.y + (int)(tb[j]->get_size() / 2) && hit_obj.y+ (int)(size / 2) > Hit_test.y - (int)(tb[j]->get_size() / 2)) {
-				a[0] = 10;
-				a[1] = 0;
-				a[2] = 0;
-				hit = TRUE;
-			}
-		}
-		j++;
-	}*/
+	
 	int i,j;
 
 	Object *onthis,*testthis;
@@ -139,7 +115,8 @@ void SceneMgr::colison_test() {
 				else if (getonthis.y + (int)(thissize / 2) < gettestthis.y - (int)(testsize / 2)) { j++; }
 				else if (getonthis.y - (int)(thissize / 2) > gettestthis.y + (int)(testsize / 2)) { j++; }
 				else {
-					if (onthis->get_type() != testthis->get_type()) {
+					
+					if (onthis->get_type() != testthis->get_type()&& i != testthis->get_owner() && onthis->get_owner() != i) {
 						onthis->HIt_BOOL(TRUE,20);
 					}
 					else {
@@ -156,11 +133,11 @@ void SceneMgr::colison_test() {
 	}//for 닫힘
 }
 
-void SceneMgr::create_Object(int x, int y, int type)
+void SceneMgr::create_Object(int x, int y, int type,int owner)
 {
 	Object *tx;
 	tx = (Object*)malloc(sizeof(Object));
-	tx = new Object(x, y, type);
+	tx = new Object(x, y, type, owner);
 
 	int i;
 	for (i = 0; i < MAX_INDEX; i++) {
