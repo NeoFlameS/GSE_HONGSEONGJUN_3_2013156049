@@ -5,8 +5,8 @@ SceneMgr::SceneMgr() {
 	int i = 0;
 	srand(time(NULL));
 	
-	this->tb[0] = &Object(rand() % 500, rand() % 500, 1,-1);
-	this->cur_index = 10;
+	this->tb[0] = &Object(rand() % 500, rand() % 800, 1,-1,Team_1);
+	//this->cur_index = MAX_INDEX;
 }
 SceneMgr::SceneMgr(Renderer *a)
 {
@@ -19,11 +19,19 @@ SceneMgr::SceneMgr(Renderer *a)
 
 	srand(time(NULL));
 	this->building_image = a->CreatePngTexture("./Textures/PNGs/copy.png");
-	this->tb[0] = new Object( 0, 0, 2, -1);//ºôµù ÇÏ³ª »ý¼º
-	this->cur_index = MAX_INDEX;
+	this->tb[0] = new Object( 0, 300, 2, -1, Team_1);//ºôµù ÇÏ³ª »ý¼º
+	this->tb[1] = new Object(-100, 250, 2, -1, Team_1);
+	this->tb[2] = new Object(100, 250, 2, -1, Team_1);
+
+	this->tb[3] = new Object(0, -300, 2, -1, Team_2);//ºôµù ÇÏ³ª »ý¼º
+	this->tb[4] = new Object(-100, -250, 2, -1, Team_2);
+	this->tb[5] = new Object(100, -250, 2, -1, Team_2);
+	//this->cur_index = MAX_INDEX;
 
 	this->Prv_time = 0;
 	this->Bt_time = 0;
+	this->team_1 = 0;
+	this->team_2 = 0;
 }
 
 void SceneMgr::Update_Scene()
@@ -44,12 +52,23 @@ void SceneMgr::Update_Scene()
 			free(h);
 		}
 		if (state == 1) {
+			if(this->tb[i]->get_type()==1){
 			state = 0;
-			this->create_Object(this->tb[i]->Location_search().x+this->tb[i]->get_vector().x*this->tb[i]->get_size(), this->tb[i]->Location_search().y + this->tb[i]->get_vector().y*this->tb[i]->get_size(),4,i);
+			this->create_Object(this->tb[i]->Location_search().x+this->tb[i]->get_vector().x*this->tb[i]->get_size(), this->tb[i]->Location_search().y + this->tb[i]->get_vector().y*this->tb[i]->get_size(),4,i, this->tb[i]->get_team());
+			}
+			else if(this->tb[i]->get_type() == 2) {
+				state = 0;
+				this->create_Object(this->tb[i]->Location_search().x + this->tb[i]->get_vector().x*this->tb[i]->get_size(), this->tb[i]->Location_search().y + this->tb[i]->get_vector().y*this->tb[i]->get_size(), 3, i, this->tb[i]->get_team());
+			}
 		}
 		
 	}
-	
+	this->team_1 -= this->Bt_time/1000;
+	this->team_2 -= this->Bt_time / 1000;
+	if (team_1 <= 0) {
+		this->create_Object(rand() % 250, rand() % 400, 1,-1, Team_1);
+		this->team_1 = 5.0;
+	}
 	Bt_time = timeGetTime() - this->Prv_time;
 	
 }
@@ -59,7 +78,7 @@ void SceneMgr::draw()
 	int i = 0;
 	int j = 0;
 	int *a;
-	int *rgb;
+	float *rgb;
 
 	POINT s;
 
@@ -116,7 +135,7 @@ void SceneMgr::colison_test() {
 				else if (getonthis.y - (int)(thissize / 2) > gettestthis.y + (int)(testsize / 2)) { j++; }
 				else {
 					
-					if (onthis->get_type() != testthis->get_type()&& i != testthis->get_owner() && onthis->get_owner() != i) {
+					if (onthis->get_type() != testthis->get_type()&& i != testthis->get_owner() && onthis->get_owner() != i && onthis->get_team() != testthis->get_team()) {
 						onthis->HIt_BOOL(TRUE,testthis->get_hp());
 					}
 					else {
@@ -133,18 +152,30 @@ void SceneMgr::colison_test() {
 	}//for ´ÝÈû
 }
 
-void SceneMgr::create_Object(int x, int y, int type,int owner)
+void SceneMgr::create_Object(int x, int y, int type,int owner,int team)
 {
+	
+	
+	if (type==1&&team == Team_2 && this->team_2 > 0) {
+
+		return;
+	}
+	else if (type == 1&&team == Team_2 && y > 0) {
+		return;
+	}
+	else if(type == 1&&team == Team_2){
+		this->team_2 = 7.0;
+	}
 	Object *tx;
 	tx = (Object*)malloc(sizeof(Object));
-	tx = new Object(x, y, type, owner);
-
+	tx = new Object(x, y, type, owner,team);
+	
 	int i;
 	for (i = 0; i < MAX_INDEX; i++) {
 		if (this->tb[i] != NULL) {
 			if (i == MAX_INDEX - 1) {
 				free(tx);
-				return;
+				break;
 			}
 			continue;
 		}

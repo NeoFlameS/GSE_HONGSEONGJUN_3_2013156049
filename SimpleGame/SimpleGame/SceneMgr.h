@@ -19,7 +19,7 @@ private :
 	Object *tb[MAX_INDEX];
 	
 
-
+	float team_1,team_2;//북쪽 진영 젠타임, 남쪽 진영 쿨타임
 	Renderer *g;
 	void colison_test();
 	void Update_Scene();
@@ -33,5 +33,5 @@ public :
 	SceneMgr(Renderer *a);
 	
 	void draw();
-	void create_Object(int x, int y, int type,int owner);
+	void create_Object(int x, int y, int type,int owner, int team);
 };

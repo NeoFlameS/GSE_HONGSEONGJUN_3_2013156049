@@ -47,9 +47,9 @@ void Idle(void)
 
 void MouseInput(int button, int state, int x, int y)
 {
-	printf("%d %d\n", x, y);
+	
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && mouse_state == 0) {
-		main_ob->create_Object(x-250, 250-y, OBJECT_CHARACTER,-1);
+		main_ob->create_Object(x-250, 400-y, OBJECT_CHARACTER,-1,Team_2);
 		mouse_state = 1;
 	}
 	if (button == GLUT_LEFT_BUTTON && state == GLUT_UP && mouse_state ==1) {
@@ -76,7 +76,7 @@ int main(int argc, char **argv)
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_DEPTH | GLUT_DOUBLE | GLUT_RGBA);
 	glutInitWindowPosition(0, 0);
-	glutInitWindowSize(500, 500);
+	glutInitWindowSize(500, 800);
 	glutCreateWindow("Game Software Engineering KPU");
 
 	glewInit();
@@ -90,7 +90,7 @@ int main(int argc, char **argv)
 	}
 
 	// Initialize Renderer
-	g_Renderer = new Renderer(500, 500);
+	g_Renderer = new Renderer(500, 800);
 	if (!g_Renderer->IsInitialized())
 	{
 		std::cout << "Renderer could not be initialized.. \n";
