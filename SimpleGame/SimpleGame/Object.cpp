@@ -159,8 +159,8 @@ bool Object::Object_Update(float time,int *state) {//업데이트
 		}
 	}
 	
-	this->locate.x += this->vector.x*(time/1000)*this->speed/2;
-	this->locate.y += this->vector.y*(time/1000)*this->speed/2;
+	this->locate.x += this->vector.x*(time/1000)*this->speed;
+	this->locate.y += this->vector.y*(time/1000)*this->speed;
 
 	return TRUE;
 }
