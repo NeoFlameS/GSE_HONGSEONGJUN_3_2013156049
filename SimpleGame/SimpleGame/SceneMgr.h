@@ -7,7 +7,7 @@
 #include "Renderer.h"
 #include <time.h>
 
-#define MAX_INDEX 50
+#define MAX_INDEX 500
 #define OBJECT_CHARACTER 1
 #define OBJECT_BUILDING 2
 #define OBJECT_BULLET 3
@@ -23,7 +23,7 @@ private :
 	Renderer *g;
 	void colison_test();
 	void Update_Scene();
-
+	int building_image;
 	float Bt_time, Prv_time;
 
 public :
@@ -33,5 +33,5 @@ public :
 	SceneMgr(Renderer *a);
 	
 	void draw();
-	void create_Object(int x, int y, int type);
+	void create_Object(int x, int y, int type,int owner);
 };
