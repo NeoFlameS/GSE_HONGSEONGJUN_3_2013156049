@@ -19,11 +19,11 @@ private :
 	Object *tb[MAX_INDEX];
 	
 
-
+	float team_1,team_2;//ºÏÂÊ Áø¿µ Á¨Å¸ÀÓ, ³²ÂÊ Áø¿µ ÄğÅ¸ÀÓ
 	Renderer *g;
 	void colison_test();
 	void Update_Scene();
-	int building_image;
+	int building_image[2];
 	float Bt_time, Prv_time;
 
 public :
@@ -33,5 +33,5 @@ public :
 	SceneMgr(Renderer *a);
 	
 	void draw();
-	void create_Object(int x, int y, int type,int owner);
+	void create_Object(int x, int y, int type,int owner, int team);
 };
