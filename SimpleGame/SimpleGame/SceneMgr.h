@@ -19,12 +19,12 @@ private :
 	Object *tb[MAX_INDEX];
 	
 
-	float team_1,team_2;//북쪽 진영 젠타임, 남쪽 진영 쿨타임
+	long team_1,team_2;//북쪽 진영 젠타임, 남쪽 진영 쿨타임
 	Renderer *g;
 	void colison_test();
 	void Update_Scene();
 	int building_image[2];
-	float Bt_time, Prv_time;
+	long Bt_time, Prv_time;
 
 public :
 

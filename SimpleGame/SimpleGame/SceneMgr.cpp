@@ -64,13 +64,15 @@ void SceneMgr::Update_Scene()
 		}
 		
 	}
-	this->team_1 -= this->Bt_time/1000;
-	this->team_2 -= this->Bt_time / 1000;
+	this->team_1 -= this->Bt_time;
+	this->team_2 -= this->Bt_time;
+	//printf("%d\n",this->team_2);
 	if (team_1 <= 0) {
 		this->create_Object(rand() % 250, rand() % 400, 1,-1, Team_1);
-		this->team_1 = 5.0;
+		this->team_1 = 5000;
 	}
-	Bt_time = timeGetTime() - this->Prv_time;
+//	Bt_time = timeGetTime() - this->Prv_time;
+	
 	
 }
 
@@ -93,17 +95,23 @@ void SceneMgr::draw()
 		s = this->tb[i]->Location_search();
 		//a = this->colison_test(s, i, this->tb[i]->get_size());
 		rgb = this->tb[i]->get_color();
+		if (this->tb[i]->get_type() <= 2) {
+			this->g->DrawSolidRectGauge(s.x, s.y + this->tb[i]->get_size() / 2 + 3, i, this->tb[i]->get_size(), 3, rgb[0], rgb[1], rgb[2], 1, (float)this->tb[i]->get_hp() / (float)this->tb[i]->get_maxHP(), this->tb[i]->get_level());
+		}
 		if (this->tb[i]->get_type() == 2) 
 			if(this->tb[i]->get_team()==1){
-				this->g->DrawTexturedRect(s.x, s.y, i, tb[i]->get_size(), rgb[0], rgb[1], rgb[2], 1, this->building_image[0]);
+				//this->g->DrawSolidRectGauge(s.x, s.y+ this->tb[i]->get_size()/2+3, i, this->tb[i]->get_size(), 3, rgb[0], rgb[1], rgb[2], 1, (float)this->tb[i]->get_hp()/(float)this->tb[i]->get_maxHP(), this->tb[i]->get_level());
+				this->g->DrawTexturedRect(s.x, s.y, i, tb[i]->get_size(), 1, 1, 1, 1, this->building_image[0], tb[i]->get_level());
 			}
 			else {
-				this->g->DrawTexturedRect(s.x, s.y, i, tb[i]->get_size(), rgb[0], rgb[1], rgb[2], 1, this->building_image[1]);
+
+				this->g->DrawTexturedRect(s.x, s.y, i, tb[i]->get_size(), 1, 1, 1, 1, this->building_image[1], tb[i]->get_level());
 			}
-		else this->g->DrawSolidRect(s.x,s.y,i,tb[i]->get_size(),rgb[0], rgb[1], rgb[2],1);
+		else this->g->DrawSolidRect(s.x,s.y,i,tb[i]->get_size(),rgb[0], rgb[1], rgb[2],1,tb[i]->get_level());
 	}
 	Sleep(10);
 	this->Update_Scene();
+	this->Bt_time = timeGetTime() - this->Prv_time;
 }
 
 void SceneMgr::colison_test() {
@@ -143,6 +151,11 @@ void SceneMgr::colison_test() {
 				else {
 					
 					if (onthis->get_type() != testthis->get_type()&& i != testthis->get_owner() && onthis->get_owner() != i && onthis->get_team() != testthis->get_team()) {
+						if (onthis->get_type() == 3 || onthis->get_type() == 4) {
+							if (testthis->get_type() == 3 || testthis->get_type() == 4) {
+								onthis->HIt_BOOL(TRUE, 0);
+							}
+						}
 						onthis->HIt_BOOL(TRUE,testthis->get_hp());
 					}
 					else {
@@ -162,16 +175,16 @@ void SceneMgr::colison_test() {
 void SceneMgr::create_Object(int x, int y, int type,int owner,int team)
 {
 	
-	
-	if (type==1&&team == Team_2 && this->team_2 > 0) {
+	printf("%d\n",team_2);
+	if (type==1&&team == Team_2 && this->team_2 > 0.0) {//쿨타임 team_2가 아직 0보다 크면 생성안되게함
 
 		return;
 	}
-	else if (type == 1&&team == Team_2 && y > 0) {
+	/*else if (type == 1&&team == Team_2 && y > 0) {//위치가 위쪽일때
 		return;
-	}
+	}*/
 	else if(type == 1&&team == Team_2){
-		this->team_2 = 7.0;
+		this->team_2 = 1000;
 	}
 	Object *tx;
 	tx = (Object*)malloc(sizeof(Object));

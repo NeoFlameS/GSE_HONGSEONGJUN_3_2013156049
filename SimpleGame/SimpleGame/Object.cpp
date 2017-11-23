@@ -28,7 +28,7 @@ Object::Object(long x, long y, short type,int owner,int team) {//x,y 좌, 객체의 
 
 	case 1 ://캐릭터
 
-		this->hp = 10;
+		this->max_HP = this->hp = 10;
 		this->speed = 100;
 		this->size = 10;
 		this->gen_timer = 0;
@@ -36,12 +36,12 @@ Object::Object(long x, long y, short type,int owner,int team) {//x,y 좌, 객체의 
 		this->org_gentime = Character_gentime;
 		this->vector.x = (rand() % 4) - 2;
 		this->vector.y = (rand() % 4) - 2;
-
+		this->draw_level = 0.2;
 		break;
 	
 	case 2 ://건물
 
-		this->hp = 500;
+		this->max_HP = this->hp = 500;
 		this->speed = 0;
 		this->size = 50;
 		this->gen_timer = Building_gentime;
@@ -49,28 +49,28 @@ Object::Object(long x, long y, short type,int owner,int team) {//x,y 좌, 객체의 
 		this->vector.y = 0;
 		org_gentime = Building_gentime;
 		this->life_limit = FALSE;
-
+		this->draw_level = 0.1;
 		break;
 
 	case 3 ://총알 
 
-		this->hp = 20;
+		this->max_HP = this->hp = 20;
 		this->speed = 600;
 		this->size = 2;
 		this->life_limit = FALSE;
 		this->vector.x = (rand() % 4) - 2;
 		this->vector.y = (rand() % 4) - 2;
-
+		this->draw_level = 0.3;
 		break;
 
 	case 4 ://화살
-		this->hp = 10;
+		this->max_HP = this->hp = 10;
 		this->speed = 100;
 		this->size = 2;
 		this->life_limit = FALSE;
 		this->vector.x = (rand() % 4) - 2;
 		this->vector.y = (rand() % 4) - 2;
-
+		this->draw_level = 0.3;
 		break;
 	}
 	if (team == Team_1) {
@@ -109,7 +109,7 @@ bool Object::Damaged(short damage) {
 
 }
 
-bool Object::Object_Update(float time,int *state) {//업데이트
+bool Object::Object_Update(long time,int *state) {//업데이트
 	//this->gen_timer--;
 	//this->locate.y++;
 	
@@ -136,18 +136,22 @@ bool Object::Object_Update(float time,int *state) {//업데이트
 
 	if (this->type != 2) {//건물만 제외 아닌 오브젝트는 임시로 속도와 방향 변경
 		if (this->locate.x <= -250) {
+			if (this->type == 3 || this->type == 4) return FALSE;
 			this->locate.x = -250;
 			this->vector.x = (rand() % 4) - 2;
 		}
 		if (this->locate.x >= 250) {
+			if (this->type == 3 || this->type == 4) return FALSE;
 			this->locate.x = 250;
 			this->vector.x = (rand() % 4) - 2;
 		}
 		if (this->locate.y <= -400) {
+			if (this->type == 3 || this->type == 4) return FALSE;
 			this->locate.y = -400;
 			this->vector.y = (rand() % 4) - 2;
 		}
 		if (this->locate.y >= 400) {
+			if (this->type == 3 || this->type == 4) return FALSE;
 			this->locate.y = 400;
 			this->vector.y = (rand() % 4) - 2;
 		}
@@ -158,9 +162,9 @@ bool Object::Object_Update(float time,int *state) {//업데이트
 			this->vector.y = (rand() % 4) - 2;
 		}
 	}
-	
-	this->locate.x += this->vector.x*(time/1000)*this->speed;
-	this->locate.y += this->vector.y*(time/1000)*this->speed;
+
+	this->locate.x += this->vector.x*((double)time/1000)*this->speed;
+	this->locate.y += this->vector.y*((double)time/1000)*this->speed;
 
 	return TRUE;
 }
@@ -193,8 +197,14 @@ int Object::get_type() {
 int Object::get_hp() {
 	return this->hp;
 }
+int Object::get_maxHP() {
+	return this->max_HP;
+}
 void Object::HIt_BOOL(bool hit,int damage) {//오브젝트 피격 판정 및 임시 데미지 축적
 	this->hit_state = hit;
 	
 	this->hp -= damage;
+}
+double Object::get_level() {
+	return this->draw_level;
 }
