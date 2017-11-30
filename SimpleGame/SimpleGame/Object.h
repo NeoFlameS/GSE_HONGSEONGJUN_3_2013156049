@@ -6,7 +6,7 @@
 #define Team_1 1
 #define Team_2 2
 #define Character_gentime 3000
-#define Building_gentime 8000
+#define Building_gentime 3000
 
 class Object{
 private:
@@ -20,6 +20,8 @@ private:
 	bool hit_state;
 	int team;
 	double draw_level;
+	float frame;
+	int ani_state;
 public:
 	bool life_limit;
 	Object();
@@ -27,7 +29,7 @@ public:
 
 	bool Damaged(short damage);
 	POINT Location_search();
-	bool Object_Update(long time,int *state);
+	bool Object_Update(float time,int *state);
 
 	int get_owner();
 	int get_size();
@@ -38,6 +40,8 @@ public:
 	int get_team();
 	double get_level();
 	POINT get_vector();
+	float get_frame();
+	int get_ani_state();
 
 	void HIt_BOOL(bool hit, int damage);
 

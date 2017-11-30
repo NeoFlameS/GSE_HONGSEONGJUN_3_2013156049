@@ -25,7 +25,10 @@ private :
 	void Update_Scene();
 	int building_image[2];
 	long Bt_time, Prv_time;
-
+	int particle;
+	int mapimage,animation;
+	int frame, an_state;
+	
 public :
 
 	int cur_index;

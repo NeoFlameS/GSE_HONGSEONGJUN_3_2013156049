@@ -37,6 +37,8 @@ Object::Object(long x, long y, short type,int owner,int team) {//x,y 좌, 객체의 
 		this->vector.x = (rand() % 4) - 2;
 		this->vector.y = (rand() % 4) - 2;
 		this->draw_level = 0.2;
+		this->frame = 0.0;
+		this->ani_state = 3;//디폴트
 		break;
 	
 	case 2 ://건물
@@ -44,7 +46,7 @@ Object::Object(long x, long y, short type,int owner,int team) {//x,y 좌, 객체의 
 		this->max_HP = this->hp = 500;
 		this->speed = 0;
 		this->size = 50;
-		this->gen_timer = Building_gentime;
+		this->gen_timer = 0;
 		this->vector.x = 0;
 		this->vector.y = 0;
 		org_gentime = Building_gentime;
@@ -55,7 +57,7 @@ Object::Object(long x, long y, short type,int owner,int team) {//x,y 좌, 객체의 
 	case 3 ://총알 
 
 		this->max_HP = this->hp = 20;
-		this->speed = 600;
+		this->speed = 600/3;
 		this->size = 2;
 		this->life_limit = FALSE;
 		this->vector.x = (rand() % 4) - 2;
@@ -109,7 +111,7 @@ bool Object::Damaged(short damage) {
 
 }
 
-bool Object::Object_Update(long time,int *state) {//업데이트
+bool Object::Object_Update(float time,int *state) {//업데이트
 	//this->gen_timer--;
 	//this->locate.y++;
 	
@@ -125,14 +127,17 @@ bool Object::Object_Update(long time,int *state) {//업데이트
 	}
 
 	if (this->type == 1 || this->type ==2) {
-		this->gen_timer -= time/1000;
+		this->gen_timer -= time;
 		if (this->gen_timer <= 0) {
 			this->gen_timer = this->org_gentime;
 			*state = 1;
 		}
 	}
 	
-
+	this->frame += (float)((float)time/50);
+	if (frame >= 8 && this->type == 1) {//z
+		frame = 0.0;
+	}
 
 	if (this->type != 2) {//건물만 제외 아닌 오브젝트는 임시로 속도와 방향 변경
 		if (this->locate.x <= -250) {
@@ -207,4 +212,12 @@ void Object::HIt_BOOL(bool hit,int damage) {//오브젝트 피격 판정 및 임시 데미지 
 }
 double Object::get_level() {
 	return this->draw_level;
+}
+
+float Object::get_frame() {
+	return this->frame;
+}
+
+int Object::get_ani_state() {
+	return this->ani_state;
 }

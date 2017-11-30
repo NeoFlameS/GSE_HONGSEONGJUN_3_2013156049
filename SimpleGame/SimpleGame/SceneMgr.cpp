@@ -17,6 +17,12 @@ SceneMgr::SceneMgr(Renderer *a)
 
 	ZeroMemory(tb,sizeof(tb));
 
+	this->mapimage = a->CreatePngTexture("./Textures/PNGs/back.png");
+	this->animation = a->CreatePngTexture("./Textures/PNGs/animation_sheet.png");
+	this->particle = a->CreatePngTexture("./Textures/PNGs/partcle.png");
+	this->frame = 0;
+	this->an_state = 3;
+
 	srand(time(NULL));
 	this->building_image[0] = a->CreatePngTexture("./Textures/PNGs/copy.png");
 	this->building_image[1] = a->CreatePngTexture("./Textures/PNGs/souv.png");
@@ -84,7 +90,13 @@ void SceneMgr::draw()
 	float *rgb;
 
 	POINT s;
-
+	this->g->DrawTexturedRect(0, 0, 0, 400, 1, 1, 1, 1, this->mapimage, 0.999);
+	//this->g->DrawParticle(0, 0, 0, 100, 1, 1, 1, 1, 0, 0, this->particle, (float)frame);
+	//this->g->DrawTexturedRectSeq(0,0,0,100,1,1,1,1, animation, frame, an_state, 8, 4, 0.1);
+	frame++;
+	if (frame >= 8) {
+		frame = 0;
+	}
 	//draw tower
 	this->Prv_time = timeGetTime();
 
@@ -98,16 +110,25 @@ void SceneMgr::draw()
 		if (this->tb[i]->get_type() <= 2) {
 			this->g->DrawSolidRectGauge(s.x, s.y + this->tb[i]->get_size() / 2 + 3, i, this->tb[i]->get_size(), 3, rgb[0], rgb[1], rgb[2], 1, (float)this->tb[i]->get_hp() / (float)this->tb[i]->get_maxHP(), this->tb[i]->get_level());
 		}
-		if (this->tb[i]->get_type() == 2) 
+		if (this->tb[i]->get_type() == 2) {
 			if(this->tb[i]->get_team()==1){
 				//this->g->DrawSolidRectGauge(s.x, s.y+ this->tb[i]->get_size()/2+3, i, this->tb[i]->get_size(), 3, rgb[0], rgb[1], rgb[2], 1, (float)this->tb[i]->get_hp()/(float)this->tb[i]->get_maxHP(), this->tb[i]->get_level());
 				this->g->DrawTexturedRect(s.x, s.y, i, tb[i]->get_size(), 1, 1, 1, 1, this->building_image[0], tb[i]->get_level());
 			}
 			else {
-
 				this->g->DrawTexturedRect(s.x, s.y, i, tb[i]->get_size(), 1, 1, 1, 1, this->building_image[1], tb[i]->get_level());
 			}
-		else this->g->DrawSolidRect(s.x,s.y,i,tb[i]->get_size(),rgb[0], rgb[1], rgb[2],1,tb[i]->get_level());
+		}
+		else if (this->tb[i]->get_type() == 1) {
+			this->g->DrawTexturedRectSeq(s.x, s.y, i, 100, 1, 1, 1, 1, animation, (int)this->tb[i]->get_frame(), this->tb[i]->get_ani_state(), 8, 4, this->tb[i]->get_level());
+		}
+		else {
+			if (this->tb[i]->get_type() == 3) {
+				this->g->DrawParticle(s.x, s.y, 0, 10, 1, 1, 1, 1, 0, 0, this->particle, 0);
+			}
+			this->g->DrawSolidRect(s.x, s.y, i, tb[i]->get_size()*2, rgb[0], rgb[1], rgb[2], 1, tb[i]->get_level());
+		}
+		
 	}
 	Sleep(10);
 	this->Update_Scene();
@@ -175,14 +196,14 @@ void SceneMgr::colison_test() {
 void SceneMgr::create_Object(int x, int y, int type,int owner,int team)
 {
 	
-	printf("%d\n",team_2);
+	//printf("%d\n",team_2);
 	if (type==1&&team == Team_2 && this->team_2 > 0.0) {//쿨타임 team_2가 아직 0보다 크면 생성안되게함
 
 		return;
 	}
-	/*else if (type == 1&&team == Team_2 && y > 0) {//위치가 위쪽일때
+	else if (type == 1&&team == Team_2 && y > 0) {//위치가 위쪽일때
 		return;
-	}*/
+	}
 	else if(type == 1&&team == Team_2){
 		this->team_2 = 1000;
 	}
