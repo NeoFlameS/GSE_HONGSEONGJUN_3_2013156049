@@ -35,8 +35,8 @@ SceneMgr::SceneMgr(Renderer *a)
 	this->tb[5] = new Object(100, -250, 2, -1, Team_2);
 	//this->cur_index = MAX_INDEX;
 
-	this->Prv_time = 0;
-	this->Bt_time = 0;
+	this->Prv_time = 0.0;
+	this->Bt_time = 0.0;
 	this->team_1 = 0;
 	this->team_2 = 0;
 }
@@ -72,12 +72,12 @@ void SceneMgr::Update_Scene()
 	}
 	this->team_1 -= this->Bt_time;
 	this->team_2 -= this->Bt_time;
-	//printf("%d\n",this->team_2);
+	
 	if (team_1 <= 0) {
 		this->create_Object(rand() % 250, rand() % 400, 1,-1, Team_1);
 		this->team_1 = 5000;
 	}
-//	Bt_time = timeGetTime() - this->Prv_time;
+
 	
 	
 }
@@ -98,8 +98,8 @@ void SceneMgr::draw()
 		frame = 0;
 	}
 	//draw tower
-	this->Prv_time = timeGetTime();
-
+	this->Prv_time = (float)timeGetTime();
+	
 	for (i = 0; i < MAX_INDEX; i++) {
 		if (this->tb[i] == NULL){
 			continue;
@@ -123,8 +123,33 @@ void SceneMgr::draw()
 			this->g->DrawTexturedRectSeq(s.x, s.y, i, 100, 1, 1, 1, 1, animation, (int)this->tb[i]->get_frame(), this->tb[i]->get_ani_state(), 8, 4, this->tb[i]->get_level());
 		}
 		else {
-			if (this->tb[i]->get_type() == 3) {
-				this->g->DrawParticle(s.x, s.y, 0, 10, 1, 1, 1, 1, 0, 0, this->particle, 0);
+			if (this->tb[i]->get_type() == 3) {//파티클 그리는 부분
+
+				//printf("%lf\n", this->tb[i]->get_frame());
+				POINT dir = this->tb[i]->get_vector();
+				float ydir=0.0;
+				float xdir = 0.0;
+				
+				if (dir.y > 0) {
+					ydir = -1;
+				}
+				else if (dir.y < 0) {
+					ydir = 1;
+				}
+				else {
+					ydir = 0;
+				}
+
+				if (dir.x > 0) {
+					xdir = -1;
+				}
+				else if (dir.x < 0) {
+					xdir = 1;
+				}
+				else {
+					xdir = 0.0;
+				}
+				this->g->DrawParticle(s.x, s.y, 0, 10, 1, 1, 1, 1, xdir, ydir, this->particle, (float)this->tb[i]->get_frame());
 			}
 			this->g->DrawSolidRect(s.x, s.y, i, tb[i]->get_size()*2, rgb[0], rgb[1], rgb[2], 1, tb[i]->get_level());
 		}
@@ -132,7 +157,8 @@ void SceneMgr::draw()
 	}
 	Sleep(10);
 	this->Update_Scene();
-	this->Bt_time = timeGetTime() - this->Prv_time;
+	this->Bt_time = (float)timeGetTime() - this->Prv_time;
+	//printf("%lf\n", this->Bt_time);
 }
 
 void SceneMgr::colison_test() {

@@ -11,10 +11,10 @@
 class Object{
 private:
 	short hp,max_HP, delay, type;//타워 체력, 지연시간, 타워 종류
-	long gen_timer,org_gentime;//젠 타임,
+	float gen_timer,org_gentime;//젠 타임,
 	int size,speed;//사이즈
 	POINT locate,vector;
-	long Life_time;
+	float Life_time;
 	int owner;
 	float RGB_ARRAY[3];
 	bool hit_state;

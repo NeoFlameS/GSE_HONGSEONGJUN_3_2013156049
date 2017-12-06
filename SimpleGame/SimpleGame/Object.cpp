@@ -63,6 +63,7 @@ Object::Object(long x, long y, short type,int owner,int team) {//x,y ÁÂ, °´Ã¼ÀÇ 
 		this->vector.x = (rand() % 4) - 2;
 		this->vector.y = (rand() % 4) - 2;
 		this->draw_level = 0.3;
+		this->frame = 0.0;
 		break;
 
 	case 4 ://È­»ì
@@ -134,8 +135,9 @@ bool Object::Object_Update(float time,int *state) {//¾÷µ¥ÀÌÆ®
 		}
 	}
 	
-	this->frame += (float)((float)time/50);
-	if (frame >= 8 && this->type == 1) {//z
+	this->frame += time/100.0;
+	
+	if (frame >= 8) {//z
 		frame = 0.0;
 	}
 
