@@ -16,6 +16,7 @@ SceneMgr::SceneMgr(Renderer *a)
 	int i = 0;
 
 	ZeroMemory(tb,sizeof(tb));
+	
 
 	this->mapimage = a->CreatePngTexture("./Textures/PNGs/back.png");
 	this->animation = a->CreatePngTexture("./Textures/PNGs/animation_sheet.png");
@@ -88,8 +89,9 @@ void SceneMgr::draw()
 	int j = 0;
 	int *a;
 	float *rgb;
-
+	
 	POINT s;
+	this->g->DrawText(-30,370,GLUT_BITMAP_8_BY_13,1,1,1,"Game Start");
 	this->g->DrawTexturedRect(0, 0, 0, 400, 1, 1, 1, 1, this->mapimage, 0.999);
 	//this->g->DrawParticle(0, 0, 0, 100, 1, 1, 1, 1, 0, 0, this->particle, (float)frame);
 	//this->g->DrawTexturedRectSeq(0,0,0,100,1,1,1,1, animation, frame, an_state, 8, 4, 0.1);

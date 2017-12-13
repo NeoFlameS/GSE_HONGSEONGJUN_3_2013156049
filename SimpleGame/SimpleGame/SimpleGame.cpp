@@ -12,7 +12,7 @@ but WITHOUT ANY WARRANTY.
 #include <iostream>
 #include "Dependencies\glew.h"
 #include "Dependencies\freeglut.h"
-
+#include "Sound.h"
 #include "SceneMgr.h"
 #include "Renderer.h"
 #include "Object.h"
@@ -98,6 +98,9 @@ int main(int argc, char **argv)
 
 
 	main_ob = new SceneMgr(g_Renderer);
+	Sound* m_sound = new Sound();
+	int soundBG = m_sound->CreateSound("./Dependencies/SoundSamples/ophelia.mp3");
+	m_sound->PlaySound(soundBG, true, 0.2f);
 
 
 	glutDisplayFunc(RenderScene);

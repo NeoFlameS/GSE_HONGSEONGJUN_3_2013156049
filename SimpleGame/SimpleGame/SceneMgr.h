@@ -6,7 +6,7 @@
 
 #include "Renderer.h"
 #include <time.h>
-
+//#include "Sound.h"
 #define MAX_INDEX 500
 #define OBJECT_CHARACTER 1
 #define OBJECT_BUILDING 2
@@ -28,7 +28,8 @@ private :
 	int particle;
 	int mapimage,animation;
 	int frame, an_state;
-	
+	//Sound* m_sound;
+	int soundBG;
 public :
 
 	int cur_index;
