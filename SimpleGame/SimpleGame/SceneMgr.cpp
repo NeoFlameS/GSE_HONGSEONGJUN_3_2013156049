@@ -24,6 +24,8 @@ SceneMgr::SceneMgr(Renderer *a)
 	this->frame = 0;
 	this->an_state = 3;
 
+	this->climate_time = 0;
+
 	srand(time(NULL));
 	this->building_image[0] = a->CreatePngTexture("./Textures/PNGs/copy.png");
 	this->building_image[1] = a->CreatePngTexture("./Textures/PNGs/souv.png");
@@ -71,6 +73,8 @@ void SceneMgr::Update_Scene()
 		}
 		
 	}
+	
+	this->climate_time += this->Bt_time/100;
 	this->team_1 -= this->Bt_time;
 	this->team_2 -= this->Bt_time;
 	
@@ -93,6 +97,7 @@ void SceneMgr::draw()
 	POINT s;
 	this->g->DrawText(-30,370,GLUT_BITMAP_8_BY_13,1,1,1,"Game Start");
 	this->g->DrawTexturedRect(0, 0, 0, 400, 1, 1, 1, 1, this->mapimage, 0.999);
+	this->g->DrawParticleClimate(0,0,0,5,1,1,1,1,-0.1,-0.1,this->particle,this->climate_time,0.0);
 	//this->g->DrawParticle(0, 0, 0, 100, 1, 1, 1, 1, 0, 0, this->particle, (float)frame);
 	//this->g->DrawTexturedRectSeq(0,0,0,100,1,1,1,1, animation, frame, an_state, 8, 4, 0.1);
 	frame++;
@@ -151,7 +156,7 @@ void SceneMgr::draw()
 				else {
 					xdir = 0.0;
 				}
-				this->g->DrawParticle(s.x, s.y, 0, 10, 1, 1, 1, 1, xdir, ydir, this->particle, (float)this->tb[i]->get_frame());
+				this->g->DrawParticle(s.x, s.y, 0, 10, 1, 1, 1, 1, xdir, ydir, this->particle, (float)this->tb[i]->get_frame()/10, this->tb[i]->get_level());
 			}
 			this->g->DrawSolidRect(s.x, s.y, i, tb[i]->get_size()*2, rgb[0], rgb[1], rgb[2], 1, tb[i]->get_level());
 		}

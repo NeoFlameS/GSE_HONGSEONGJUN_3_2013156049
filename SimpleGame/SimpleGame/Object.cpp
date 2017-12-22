@@ -13,7 +13,7 @@ Object::Object(long x, long y, short type,int owner,int team) {//x,y 좌, 객체의 
 	
 	this->type = type;
 	this->Life_time = 0;
-	
+
 	this->locate.x = x;
 	this->locate.y = y;
 	this->owner = owner;
@@ -137,7 +137,7 @@ bool Object::Object_Update(float time,int *state) {//업데이트
 	
 	this->frame += time/100.0;
 	
-	if (frame >= 8) {//z
+	if (frame >= 8 && this->type == 1) {//z
 		frame = 0.0;
 	}
 
@@ -170,8 +170,8 @@ bool Object::Object_Update(float time,int *state) {//업데이트
 		}
 	}
 
-	this->locate.x += this->vector.x*((double)time/1000)*this->speed;
-	this->locate.y += this->vector.y*((double)time/1000)*this->speed;
+	this->locate.x += this->vector.x*((double)time/1000)*(this->speed);
+	this->locate.y += this->vector.y*((double)time/1000)*(this->speed);
 
 	return TRUE;
 }

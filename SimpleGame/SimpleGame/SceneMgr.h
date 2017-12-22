@@ -25,6 +25,7 @@ private :
 	void Update_Scene();
 	int building_image[2];
 	float Bt_time, Prv_time;
+	float climate_time;
 	int particle;
 	int mapimage,animation;
 	int frame, an_state;
